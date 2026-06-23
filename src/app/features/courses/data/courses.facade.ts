@@ -22,15 +22,13 @@ export class CoursesFacade {
   readonly loading = this.state.loading;
   readonly error = this.state.error;
 
-  private lastParams = {
+  private lastParams: GetAllModel = {
     page: 1,
     limit: 5,
-    search: '',
-    status: null as CourseStatus | null,
-    sort: 'desc' as 'asc' | 'desc',
   };
 
   loadCourses(params: GetAllModel): void {
+    this.lastParams = { ...this.lastParams, ...params };
 
     this.state.setLoading(true);
     this.state.setError(null);
@@ -39,11 +37,11 @@ export class CoursesFacade {
       .getAllCourses(this.lastParams)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.state.setLoading(false))
+        finalize(() => this.state.setLoading(false)),
       )
       .subscribe({
         next: (response) => {
-          this.state.setCourses(response.data, response.total);
+          this.state.setCourses(response.data.courses, response.data.total);
         },
         error: (err) => {
           this.state.setError(err.message ?? 'Failed to load courses');
@@ -63,7 +61,7 @@ export class CoursesFacade {
       .getCourseById(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.state.setLoading(false))
+        finalize(() => this.state.setLoading(false)),
       )
       .subscribe({
         next: (response) => {
@@ -75,10 +73,7 @@ export class CoursesFacade {
       });
   }
 
-  createCourse(
-    course: Omit<Course, 'id' | 'createdDate'>,
-    callback?: () => void
-  ): void {
+  createCourse(course: Omit<Course, 'id' | 'createdDate'>, callback?: () => void): void {
     this.state.setLoading(true);
     this.state.setError(null);
 
@@ -86,7 +81,7 @@ export class CoursesFacade {
       .createCourse(course)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.state.setLoading(false))
+        finalize(() => this.state.setLoading(false)),
       )
       .subscribe({
         next: () => {
@@ -99,11 +94,7 @@ export class CoursesFacade {
       });
   }
 
-  updateCourse(
-    id: string,
-    course: Partial<Course>,
-    callback?: () => void
-  ): void {
+  updateCourse(id: string, course: Partial<Course>, callback?: () => void): void {
     this.state.setLoading(true);
     this.state.setError(null);
 
@@ -111,7 +102,7 @@ export class CoursesFacade {
       .updateCourse(id, course)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.state.setLoading(false))
+        finalize(() => this.state.setLoading(false)),
       )
       .subscribe({
         next: () => {
@@ -132,7 +123,7 @@ export class CoursesFacade {
       .deleteCourse(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.state.setLoading(false))
+        finalize(() => this.state.setLoading(false)),
       )
       .subscribe({
         next: () => {
