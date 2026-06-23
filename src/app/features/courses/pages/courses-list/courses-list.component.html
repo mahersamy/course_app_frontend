@@ -1,0 +1,48 @@
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-800 font-bold">Course Management</h1>
+            <p class="text-secondary mb-0">View, search, filter and manage educational platform courses.</p>
+        </div>
+        <button
+            type="button"
+            class="btn btn-primary d-flex align-items-center gap-2"
+            (click)="openCreateForm()"
+        >
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Course</span>
+        </button>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="d-flex align-items-center gap-2 mb-4 p-3 rounded shadow-sm">
+        <div class="position-relative flex-grow-1">
+            <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-secondary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input
+                type="text"
+                class="form-control ps-5"
+                placeholder="Search courses by name..."
+                [(ngModel)]="searchVal"
+                (ngModelChange)="onSearchChange()"
+            />
+        </div>
+        <app-filter-panel
+            [configs]="filterConfigs"
+            [searchQuery]="searchVal"
+            (applyFilter)="onApplyFilter($event)"
+        ></app-filter-panel>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="card shadow-sm border-0 overflow-hidden mb-4">
+        <app-data-table></app-data-table>
+    </div>
+
+    <!-- Paginator -->
+    <app-paginator
+        [config]="paginatorConfig()"
+        (pageChange)="onPageChange($event)"
+    ></app-paginator>
+</div>

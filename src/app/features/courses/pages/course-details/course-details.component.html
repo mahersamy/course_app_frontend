@@ -1,0 +1,122 @@
+<div class="course-details-page">
+  <!-- Header -->
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to List
+    </button>
+
+    <div>
+      <h1>Course Details</h1>
+      <p>View complete course information</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading course details...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-card">
+      <i class="fa-solid fa-circle-exclamation"></i>
+
+      <div>
+        <h4>Error</h4>
+        <p>{{ error() }}</p>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && !error() && course()) {
+    <div class="course-card">
+      <!-- Top -->
+      <div class="course-cover">
+        <div>
+          <span class="category">
+            {{ course()?.category }}
+          </span>
+
+          <h2>
+            {{ course()?.courseName }}
+          </h2>
+
+          <p>
+            Instructor:
+            <strong>
+              {{ course()?.instructorName }}
+            </strong>
+          </p>
+        </div>
+
+        <span
+          class="status"
+          [class.active]="course()?.status === 'Active'"
+          [class.draft]="course()?.status === 'Draft'"
+          [class.archived]="course()?.status === 'Archived'"
+        >
+          {{ course()?.status }}
+        </span>
+      </div>
+
+      <!-- Stats -->
+
+      <div class="stats">
+        <div class="stat-card">
+          <i class="fa-solid fa-clock"></i>
+
+          <div>
+            <small>Duration</small>
+            <h3>{{ course()?.duration }}h</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-dollar-sign"></i>
+
+          <div>
+            <small>Price</small>
+
+            <h3>
+              {{ course()?.price | currency }}
+            </h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar"></i>
+
+          <div>
+            <small>Created</small>
+
+            <h3 class="date">
+              {{ course()?.createdDate | date: 'MMM d, yyyy' }}
+            </h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-id-card"></i>
+
+          <div>
+            <small>ID</small>
+
+            <h3>#{{ course()?.id }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+
+      <div class="description">
+        <h3>Description</h3>
+
+        <p>
+          {{ course()?.description || 'No description provided for this course.' }}
+        </p>
+      </div>
+    </div>
+  }
+</div>

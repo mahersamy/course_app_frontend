@@ -1,0 +1,138 @@
+<div class="filter-panel-wrapper">
+    <!-- Trigger button -->
+    <button
+        class="filter-trigger"
+        (click)="toggle()"
+    >
+        <i class="fa-solid fa-filter"></i>
+        {{ 'Filter' }} @if (activeCount() > 0) {
+        <span class="badge">{{ activeCount() }}</span>
+        }
+        <i
+            class="fa-solid fa-chevron-down chevron"
+            [class.open]="isOpen()"
+        ></i>
+    </button>
+
+    <!-- Panel -->
+    @if (isOpen()) {
+    <div
+        class="filter-backdrop"
+        (click)="isOpen.set(false)"
+    ></div>
+    <div class="panel">
+        <div class="panel-header">
+            <span>{{ 'Filter' }}</span>
+            <button
+                class="reset-btn"
+                (click)="reset()"
+            >
+                {{ 'reset all' }}
+            </button>
+        </div>
+
+        <!-- Dynamic fields -->
+        <div class="fields">
+            @for (config of configs(); track config.controlName) {
+
+            <!-- SELECT -->
+            @if (config.type === FilterFieldType.SELECT) {
+            <div class="field-group">
+                <label>{{ config.label }}</label>
+                <select
+                    [ngModel]="fieldValues()[config.controlName]"
+                    (ngModelChange)="updateFieldValue(config.controlName, $event)"
+                >
+                    <option [ngValue]="null">
+                        {{ config.placeholder || '' }}
+                    </option>
+                    @for (opt of config.select_list ?? []; track opt.value) {
+                    <option [ngValue]="opt.value">{{ opt.label }}</option>
+                    }
+                </select>
+            </div>
+            }
+
+            <!-- TEXT -->
+            @if (config.type === FilterFieldType.TEXT) {
+            <div class="field-group">
+                <label>{{ config.label }}</label>
+                <input
+                    type="text"
+                    [ngModel]="fieldValues()[config.controlName]"
+                    (ngModelChange)="updateFieldValue(config.controlName, $event)"
+                    [placeholder]="config.placeholder"
+                />
+            </div>
+            }
+
+            <!-- RANGE -->
+            @if (config.type === FilterFieldType.RANGE) {
+            <div class="field-group">
+                <label>{{ config.label }}</label>
+                <div class="range-row">
+                    <input
+                        type="number"
+                        [placeholder]="'min'"
+                        [ngModel]="fieldValues()[config.controlName].min"
+                        (ngModelChange)="updateRangeField(config.controlName, 'min', $event)"
+                    />
+                    <span class="sep">—</span>
+                    <input
+                        type="number"
+                        [placeholder]="'max'"
+                        [ngModel]="fieldValues()[config.controlName].max"
+                        (ngModelChange)="updateRangeField(config.controlName, 'max', $event)"
+                    />
+                </div>
+            </div>
+            }
+
+            <!-- DATE -->
+            @if (config.type === FilterFieldType.DATE) {
+            <div class="field-group">
+                <label>{{ config.label }}</label>
+                <input
+                    type="date"
+                    [ngModel]="fieldValues()[config.controlName]"
+                    (ngModelChange)="updateFieldValue(config.controlName, $event)"
+                />
+            </div>
+            } }
+
+            <!-- Sort -->
+            <div class="field-group">
+                <label>{{ 'sort'}}</label>
+                <div class="sort-row">
+                    <button
+                        class="sort-btn"
+                        [class.active]="sortDirection() === 'asc'"
+                        (click)="sortDirection.set(sortDirection() === 'asc' ? null : 'asc')"
+                    >
+                        <i class="fa-solid fa-arrow-up"></i>
+                        {{ 'asc' }}
+                    </button>
+                    <button
+                        class="sort-btn"
+                        [class.active]="sortDirection() === 'desc'"
+                        (click)="sortDirection.set(sortDirection() === 'desc' ? null : 'desc')"
+                    >
+                        <i class="fa-solid fa-arrow-down"></i>
+                        {{ 'desc'}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="panel-footer">
+            <button
+                class="apply-btn"
+                (click)="apply()"
+            >
+                {{ 'Applay Filter' }}
+            </button>
+        </div>
+    </div>
+    }
+</div>

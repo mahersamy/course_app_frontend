@@ -1,0 +1,25 @@
+<div class="dialog-form-container">
+    <app-dynamic-form
+        [configArr]="coursesFormConfig"
+        (form)="onFormReady($event)"
+    ></app-dynamic-form>
+
+    <div class="flex justify-content-end gap-2 mt-4">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="onCancel()"
+            [disabled]="isLoading()"
+        >
+            Cancel
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSubmit()"
+            [appLoading]="isLoading()"
+        >
+            {{ isEditMode() ? 'Update' : 'Create' }}
+        </button>
+    </div>
+</div>
