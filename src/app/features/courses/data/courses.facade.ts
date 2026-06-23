@@ -5,6 +5,7 @@ import { CoursesApiService } from './courses-api.service';
 import { CoursesState } from './courses.state';
 import { Course } from '../models/course.model';
 import { CourseStatus } from '../enums/course-status.enum';
+import { GetAllModel } from '../../../core/models/get-all.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +30,7 @@ export class CoursesFacade {
     sort: 'desc' as 'asc' | 'desc',
   };
 
-  loadCourses(params: {
-    page: number;
-    limit: number;
-    search?: string;
-    status?: CourseStatus | null;
-    sort?: 'asc' | 'desc';
-  }): void {
-    this.lastParams = { ...this.lastParams, ...params };
+  loadCourses(params: GetAllModel): void {
 
     this.state.setLoading(true);
     this.state.setError(null);
