@@ -133,6 +133,9 @@ export class CoursesListComponent implements OnInit {
         func: (course: Course) => this.deleteCourse(course),
       },
     ]);
+    this.dataTableConfig.tableConfig.refetchEvent.subscribe(() => {
+      this.loadInitialData();
+    });
   }
 
   private loadInitialData(): void {
@@ -238,7 +241,6 @@ export class CoursesListComponent implements OnInit {
       message: 'Do you want to delete this record?',
       header: 'Danger Zone',
       icon: 'pi pi-info-circle',
-
       rejectLabel: 'Cancel',
       rejectButtonProps: {
         label: 'Cancel',
